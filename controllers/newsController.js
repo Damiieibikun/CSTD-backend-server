@@ -45,7 +45,7 @@ const getNews =  async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not post news'
+            message: 'Could not fetch news'
         })
     }
 }

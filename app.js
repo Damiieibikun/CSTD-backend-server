@@ -15,6 +15,7 @@ const footer_routes = require('./routes/footerRoutes')
 const project_routes = require('./routes/projectRoutes')
 const publication_routes = require('./routes/publicationRoutes')
 const news_routes = require('./routes/newsRoutes')
+const events_routes = require('./routes/eventsRoutes')
 
 app.get('/', (req, res)=>{
     res.send('CSTD Website API')
@@ -27,6 +28,7 @@ app.use('/api/CSTDsite/footer', footer_routes)
 app.use('/api/CSTDsite/project', project_routes)
 app.use('/api/CSTDsite/pub', publication_routes)
 app.use('/api/CSTDsite/news', news_routes)
+app.use('/api/CSTDsite/events', events_routes)
 
 app.listen(config.port, ()=>{
     console.log('Server connected successfully!');
