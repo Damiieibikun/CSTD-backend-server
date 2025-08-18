@@ -153,7 +153,22 @@ const projectsSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be included"),
 });
 
-
+const newsSchema = z.object({
+  title: z.string().min(3, "Title is required"),
+  date: z.string().min(1, "Date is required"), // will store as ISO but display formatted
+  thumbnail: z.url("Thumbnail must be a valid URL"),
+  brief: z.string().min(10, "Brief description is required"),
+  content: z.string().min(20, "Content must be at least 20 characters"),
+  media: z
+    .array(
+      z.object({
+        type: z.enum(["image", "video"]),
+        url: z.string().min(1, "Media URL is required"),
+        thumbnail: z.string().optional()
+      })
+    )
+    .optional()
+});
 
 
 // Contact Form
@@ -189,6 +204,9 @@ module.exports = {
   columnSchema,
   socialLinkSchema,
   footerSchema,
+
+  // News
+  newsSchema,
 
   // Projects
   projectsSchema,
