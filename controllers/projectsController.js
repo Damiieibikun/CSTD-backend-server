@@ -60,11 +60,18 @@ const getProjects = async (req, res) => {
     const{cat} = req.query
     
     try {
-         const projects = await projectsModel.find({category: cat})
-        if(!projects) return res.status(404).send({
-            success: false,
-            message: 'Projects not found'
-        })
+        let projects;
+        if(cat){
+            projects = await projectsModel.find({category: cat})
+            if(!projects) return res.status(404).send({
+                success: false,
+                message: 'Projects not found'
+            })
+        }
+        else{
+             projects = await projectsModel.find({})            
+        }
+       
         
          res.status(200).send({
             success: true,
