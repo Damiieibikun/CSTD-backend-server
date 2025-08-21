@@ -6,6 +6,7 @@ const {registerSchema, editAdminSchema, loginSchema, changePasswordSchema} = req
 
 
 const createAdmin = async (req, res) => { 
+   
      
         const validation = registerSchema.safeParse(req.body);
 
@@ -18,7 +19,7 @@ const createAdmin = async (req, res) => {
         }        
 
         try {
-        const {email} = validation.data; 
+        const {email, role} = validation.data; 
         const adminFound = await adminModel.findOne({email: email})
         if(adminFound) return res.status(401).send({
             success: false,
@@ -26,7 +27,7 @@ const createAdmin = async (req, res) => {
         })
             
         const encrypted_pass = await bcryptjs.hash(validation.data.password, 12);
-        const new_admin = {...validation.data, password:encrypted_pass}
+        const new_admin = {...validation.data, password:encrypted_pass, role: role}
         const createdadmin = new adminModel(new_admin)
         await createdadmin.save()
 

@@ -5,6 +5,7 @@ const registerSchema = z.object({
     lastname: z.string().min(1, "*Last name is required"),
      email: z.email({ message: "*Invalid email format" }) 
             .min(1, "*Email is required"),
+    role: z.string().optional(),
     phone: z.string().min(10, "*Phone number must be at least 10 digits")
       .regex(
         /^(?:\+234|0)[789][01]\d{8}$/,
