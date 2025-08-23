@@ -13,7 +13,12 @@ const mediaSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     required: false
-  }
+  },
+  public_id: {
+    type: String,
+    required: true
+  },
+
 });
 
 const articleSchema = new mongoose.Schema(
@@ -27,11 +32,7 @@ const articleSchema = new mongoose.Schema(
       type: Date,
       required: true
     },
-    thumbnail: {
-      type: String,
-      required: true
-    },
-    brief: {
+       brief: {
       type: String,
       required: true
     },
