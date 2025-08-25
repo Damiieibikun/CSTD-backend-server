@@ -11,6 +11,7 @@ const validation = footerSchema.safeParse(req.body);
         return res.status(401).send({
             success: false,
             message: `Could not add Footer: ${formatted}`, 
+            data: null
         });           
         } 
     try {    
@@ -26,7 +27,7 @@ const validation = footerSchema.safeParse(req.body);
     res.status(500).send({
     success: false,
     message: 'Could not add Footer',
-    error: err.message
+    data: err.message
        });
   }
 }
@@ -45,7 +46,7 @@ const getFooter = async (req, res) => {
     res.status(500).send({
     success: false,
     message: 'Could not fetch Footer',
-    error: err.message
+    data: err.message
        });
     }
 }
@@ -54,14 +55,16 @@ const updateFooter = async (req, res) => {
     const{id} = req.params
         if(!id) return res.status(401).send({
             success: false,
-            message: 'ID is required'
+            message: 'ID is required',
+            data: null
         })
     const validation = footerSchema.safeParse(req.body);
     if (!validation.success) {
         const formatted = ZodError.flatten(result.error);
         return res.status(401).send({
             success: false,
-            message: `Could not update Footer: ${formatted}`, 
+            message: `Could not update Footer: ${formatted}`,
+            data: null 
         });           
         } 
     try {        
@@ -70,7 +73,8 @@ const updateFooter = async (req, res) => {
     if (!footer) return res.status(404).send(
         {   
             success: false,
-            message: "Footer not found" 
+            message: "Footer not found",
+            data: null 
         });
    
     res.status(200).send({
@@ -83,7 +87,7 @@ const updateFooter = async (req, res) => {
     res.status(500).send({
     success: false,
     message: 'Could not update Footer',
-    error: err.message
+    data: err.message
        });
   }
 }

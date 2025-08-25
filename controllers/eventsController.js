@@ -9,6 +9,7 @@ const postEvent = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not post event: ${formatted}`, 
+                data: null
             });           
         } 
 
@@ -20,13 +21,15 @@ const postEvent = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Event Created successfully!'
+            message: 'Event Created successfully!',
+            data: null
         })
         
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not post event'
+            message: 'Could not post event',
+            data: null
         })
     }
 };
@@ -46,7 +49,8 @@ const getEvents =  async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not fetch news'
+            message: 'Could not fetch news',
+            data: null
         })
     }
 };
@@ -57,18 +61,21 @@ const deleteEvent =  async (req, res) => {
     const deleteevent = await eventsModel.findByIdAndDelete(id)
         if(!deleteevent) return res.status(404).send({
             success: false,
-            message: 'Event not found'
+            message: 'Event not found',
+            data: null
         })
 
         res.status(200).send({
             success: true,
-            message: 'Event Deleted successfully!',           
+            message: 'Event Deleted successfully!', 
+            data: null       
         })
         
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not delete event'
+            message: 'Could not delete event',
+            data: null
         })
     }
 };
@@ -81,6 +88,7 @@ const editEvent =  async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not edit event: ${formatted}`, 
+                data: null
             });           
         } 
 
@@ -91,18 +99,21 @@ const editEvent =  async (req, res) => {
         const editEvent = await eventsModel.findByIdAndUpdate(id, validation.data, {new: true})
         if(!editEvent) return res.status(404).send({
             success: false,
-            message: 'Could not edit event'
+            message: 'Could not edit event',
+            data: null
         })
 
         res.status(200).send({
             success: true,
-            message: 'Event edited successfully!'
+            message: 'Event edited successfully!',
+            data: null
         })
         
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not edit event'
+            message: 'Could not edit event',
+            data: null
         })
     }
 }

@@ -10,6 +10,7 @@ const sendFeedBack = async (req, res) => {
         return res.status(401).send({
             success: false,
             message: `Could not send Message: ${formatted}`, 
+            data: null
         });           
     }  
 
@@ -20,13 +21,15 @@ const sendFeedBack = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'FeedBack Sent successfully!'
+            message: 'FeedBack Sent successfully!',
+            data: null
         })
 
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not send Message'
+            message: 'Could not send Message',
+            data: null
         })
     }
 }
@@ -44,7 +47,8 @@ const getFeedBack = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not send Message'
+            message: 'Could not send Message',
+            data: null
         })
     }
 }
@@ -54,25 +58,29 @@ const deleteFeedBack = async (req, res) => {
         if (!id){
             return res.status(401).send({
             success: false,
-            message: 'Feedback ID is required'
+            message: 'Feedback ID is required',
+            data: null
         })}
         const foundfeedBack = await feedbackModel.findByIdAndDelete(id)
         if(!foundfeedBack) {
             return res.status(404).send({
             success: false,
-            message: 'Feedback does not exist or has been deleted'
+            message: 'Feedback does not exist or has been deleted',
+            data: null
         })
 }
         res.status(200).send({
             success: true,
             message: 'FeedBack deleted successfully!',
+            data: null
             
         })
 
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not delete Message'
+            message: 'Could not delete Message',
+            data: null
         })
     }
 }
@@ -85,7 +93,8 @@ const deleteMultipleFeedBack = async (req, res) => {
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
       return res.status(400).send({
         success: false,
-        message: 'Array of feedback IDs is required'
+        message: 'Array of feedback IDs is required',
+        data: null
       });
     }
 
@@ -96,13 +105,15 @@ const deleteMultipleFeedBack = async (req, res) => {
     if (deleteResult.deletedCount === 0) {
       return res.status(404).send({
         success: false,
-        message: 'No matching feedbacks found or they may have already been deleted'
+        message: 'No matching feedbacks found or they may have already been deleted',
+        data: null
       });
     }
 
     res.status(200).send({
       success: true,
       message: `${deleteResult.deletedCount} feedback(s) deleted successfully!`,
+      data: null
     });
 
   } catch (error) {
@@ -110,7 +121,7 @@ const deleteMultipleFeedBack = async (req, res) => {
     res.status(500).send({
       success: false,
       message: 'Could not delete feedback(s)',
-      error: error.message
+      data: error.message
     });
   }
 };

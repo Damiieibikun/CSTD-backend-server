@@ -13,8 +13,6 @@ return new Promise((resolve, reject) => {
 });
 };
 
-
-
 const postNews = async (req, res) => {
     
     const textData = {
@@ -31,7 +29,7 @@ const postNews = async (req, res) => {
         return res.status(400).send({
             success: false,
             message: 'Could not post news',
-            error: formatted
+            data: formatted
         });
     }
 
@@ -39,7 +37,8 @@ const postNews = async (req, res) => {
         if (!req.files || req.files.length === 0) {
             return res.status(400).send({
                 success: false,
-                message: 'Missing required files: media'
+                message: 'Missing required files: media',
+                data: null
             });
         }
         const mediaFiles = req.files.media;
@@ -68,7 +67,8 @@ const postNews = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'News Created successfully!'
+            message: 'News Created successfully!',
+            data: null
         });
         
     } catch (error) {
@@ -76,6 +76,7 @@ const postNews = async (req, res) => {
         res.status(500).send({
             success: false,
             message: 'Could not post news',
+            data: null
            
         });
     }
@@ -94,7 +95,8 @@ const getNews =  async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not fetch news'
+            message: 'Could not fetch news',
+            data: null
         })
     }
 }
@@ -105,7 +107,8 @@ const deleteNews =  async (req, res) => {
     const deletenews = await newsModel.findByIdAndDelete(id)
         if(!deletenews) return res.status(404).send({
             success: false,
-            message: 'News not found'
+            message: 'News not found',
+            data: null
         })
 
         for (const ids of deletenews.media) {
@@ -114,13 +117,15 @@ const deleteNews =  async (req, res) => {
 
         res.status(200).send({
             success: true,
-            message: 'News Deleted successfully!',           
+            message: 'News Deleted successfully!',  
+            data: null         
         })
         
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: 'Could not delete news'
+            message: 'Could not delete news',
+            data: null
         })
     }
 }
@@ -142,7 +147,7 @@ const editNews = async (req, res) => {
         return res.status(400).send({
             success: false,
             message: 'Could not edit news',
-            error: formatted
+            data: formatted
         });           
     } 
 
@@ -154,7 +159,8 @@ const editNews = async (req, res) => {
         if (!existingNews) {
             return res.status(404).send({
                 success: false,
-                message: 'News not found'
+                message: 'News not found',
+                data: null
             });
         }
 
@@ -222,7 +228,8 @@ const editNews = async (req, res) => {
         if (!editedNews) {
             return res.status(404).send({
                 success: false,
-                message: 'Could not edit news'
+                message: 'Could not edit news',
+                data: null
             });
         }
 
@@ -237,7 +244,7 @@ const editNews = async (req, res) => {
         res.status(500).send({
             success: false,
             message: 'Could not edit news',
-            error: error.message
+            data: error.message
         });
     }
 };

@@ -14,7 +14,8 @@ const createAdmin = async (req, res) => {
             const formatted = ZodError.flatten(result.error);
             return res.status(401).send({
                 success: false,
-                message: `Could not register Admin: ${formatted}`, 
+                message: `Could not register Admin: ${formatted}`,
+                data: null
             });           
         }        
 
@@ -23,7 +24,8 @@ const createAdmin = async (req, res) => {
         const adminFound = await adminModel.findOne({email: email})
         if(adminFound) return res.status(401).send({
             success: false,
-            message: 'Admin already exists'
+            message: 'Admin already exists',
+            data: null
         })
             
         const encrypted_pass = await bcryptjs.hash(validation.data.password, 12);
@@ -33,7 +35,8 @@ const createAdmin = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Admin Created successfully!'
+            message: 'Admin Created successfully!',
+            data: null
         })
            
         } catch (err) {
@@ -41,7 +44,7 @@ const createAdmin = async (req, res) => {
             res.status(500).send({
             success: false,
             message: 'Could not create Admin',
-            error: err.message
+            data: err.message
        });
         }       
     
@@ -55,6 +58,7 @@ const createWebmaster = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not register Admin: ${formatted}`, 
+                data: null
             });           
         }        
 
@@ -63,7 +67,8 @@ const createWebmaster = async (req, res) => {
         const adminFound = await adminModel.findOne({email: email})
         if(adminFound) return res.status(401).send({
             success: false,
-            message: 'Admin already exists'
+            message: 'Admin already exists',
+            data: null
         })
             
         const encrypted_pass = await bcryptjs.hash(validation.data.password, 12);
@@ -73,7 +78,8 @@ const createWebmaster = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Admin Created successfully!'
+            message: 'Admin Created successfully!',
+            data: null
         })
            
         } catch (err) {
@@ -81,7 +87,7 @@ const createWebmaster = async (req, res) => {
             res.status(500).send({
             success: false,
             message: 'Could not create Admin',
-            error: err.message
+            data: err.message
        });
         }       
     
@@ -95,6 +101,7 @@ const loginAdmin = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not login Admin: ${formatted}`, 
+                data: null
             });           
         }
 
@@ -103,7 +110,8 @@ const loginAdmin = async (req, res) => {
         const adminFound = await adminModel.findOne({email: email})
         if(!adminFound) return res.status(404).send({
             success: false,
-            message: 'Admin not Found'
+            message: 'Admin not Found',
+            data: null
         })
 
         const checkPassword = await bcryptjs.compare(password, adminFound.password)
@@ -111,12 +119,14 @@ const loginAdmin = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: "Incorrect Password!",
+                data: null
             })
         };
                   
         if(!adminFound.approved) return res.status(401).send({
             success: false,
             message: "*Unable to log in, Please Contact Admin for further assistance",
+            data: null
         })
 
         res.status(200).send({
@@ -137,7 +147,7 @@ const loginAdmin = async (req, res) => {
         res.status(500).send({
         success: false,
         message: 'Error in logging in Admin',
-        error: err.message
+        data: err.message
     });
     }  
     
@@ -151,6 +161,7 @@ const changePwdAdmin = async(req, res) =>{
             return res.status(401).send({
                 success: false,
                 message: `Could not change Admin password: ${formatted}`, 
+                data: null
             });           
         }
 
@@ -159,7 +170,8 @@ const changePwdAdmin = async(req, res) =>{
       
         if(!id) return res.status(401).send({
             success:false,
-            message: 'ID is required'
+            message: 'ID is required',
+            data: null
         })        
 
         const found_admin = await adminModel.findById(id)
@@ -168,6 +180,7 @@ const changePwdAdmin = async(req, res) =>{
             return res.status(401).send({
                 success: false,
                 message: "Invalid Password!",
+                data: null
             })
         };
 
@@ -191,7 +204,7 @@ const changePwdAdmin = async(req, res) =>{
         res.status(500).send({
             success: false,
             message: 'Could not change admin password',
-            error: error.message
+            data: error.message
         })
     }
 }
@@ -202,7 +215,8 @@ const editAdmin = async(req, res) =>{
             const formatted = ZodError.flatten(result.error);
             return res.status(401).send({
                 success: false,
-                message: `Could not edit Admin details: ${formatted}`, 
+                message: `Could not edit Admin details: ${formatted}`,
+                data: null 
             });           
         }
 
@@ -211,7 +225,8 @@ const editAdmin = async(req, res) =>{
       
         if(!id) return res.status(401).send({
             success:false,
-            message: 'ID is required'
+            message: 'ID is required',
+            data: null
         })        
 
         const found_admin = await adminModel.findById(id)
@@ -220,6 +235,7 @@ const editAdmin = async(req, res) =>{
             return res.status(401).send({
                 success: false,
                 message: "Admin Not Found or does not exist!",
+                data: null
             })
         };
         
@@ -242,7 +258,7 @@ const editAdmin = async(req, res) =>{
         res.status(500).send({
             success: false,
             message: 'Could not change admin password',
-            error: error.message
+            data: error.message
         })
     }
 }
@@ -259,7 +275,7 @@ const fetchAdmins = async (req, res) => {
          res.status(500).send({
             success: false,
             message: 'Could not Fetch admin details',
-            error: error.message
+            data: error.message
         })
     }
 }
@@ -272,7 +288,8 @@ const approveAdmin = async (req, res) => {
        
         if(!id) return res.status(401).send({
             success: false,
-            message: "Admin id is required"
+            message: "Admin id is required",
+            data: null
         })      
 
        
@@ -280,12 +297,14 @@ const approveAdmin = async (req, res) => {
 
         if(!found_admin) return res.status(404).send({
             success: false,
-            message: 'Admin does not exist'
+            message: 'Admin does not exist',
+            data: null
         })
         if (found_admin.role === 'webmaster') {
             return res.status(401).send({
                 success: false,
-                message: 'Admin cannot be approved'
+                message: 'Admin cannot be approved',
+                data: null
             });
         }       
 
@@ -300,7 +319,7 @@ const approveAdmin = async (req, res) => {
         res.status(500).send({
             success: false,
             message: "Error in approving Admin",
-            error: error.message
+            data: error.message
         })
     }
 }
@@ -310,7 +329,8 @@ const denyAdmin = async (req, res) => {
        
         if(!id) return res.status(401).send({
             success: false,
-            message: "Admin id is required"
+            message: "Admin id is required",
+            data: null
         })      
 
        
@@ -318,12 +338,14 @@ const denyAdmin = async (req, res) => {
 
         if(!found_admin) return res.status(404).send({
             success: false,
-            message: 'Admin does not exist'
+            message: 'Admin does not exist',
+            data: null
         })
         if (found_admin.role === 'webmaster') {
             return res.status(401).send({
                 success: false,
-                message: 'Admin cannot be Denied'
+                message: 'Admin cannot be Denied',
+                data: null
             });
         }       
 
@@ -332,13 +354,13 @@ const denyAdmin = async (req, res) => {
         res.status(200).send({
             success: true,
             message: "Admin Denied successfully",
-            data: deny_admin
+            data: deny_admin            
         })
     } catch (error) {
         res.status(500).send({
             success: false,
             message: "Error in denying Admin",
-            error: error.message
+            data: error.message
         })
     }
 }
@@ -350,25 +372,28 @@ const deleteAdmin = async (req, res) => {
 
         if(!id) return res.status(401).send({
             success: false,
-            message: 'Admin ID is required'
+            message: 'Admin ID is required',
+            data: null
         })
 
         const deleteAdmin = await adminModel.findByIdAndDelete(id)
         if(!deleteAdmin) return res.status(404).send({
             success: false,
-            message: 'Admin not Found'
+            message: 'Admin not Found',
+            data: null
         })
 
         res.status(200).send({
             success: true,
-            message: 'Deleted Successfully!',           
+            message: 'Deleted Successfully!',
+            data: null           
         })
         
     } catch (error) {
         res.status(500).send({
             success: false,
             message: 'Could not delete Admin',
-            error: error.message
+            data: error.message
         })
     }
 }

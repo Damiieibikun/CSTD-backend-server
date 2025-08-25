@@ -10,6 +10,7 @@ const addUpcomingProject = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not add project: ${formatted}`, 
+                data: null
             });           
         }  
     try {
@@ -19,12 +20,14 @@ const addUpcomingProject = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Project added successfully!'
+            message: 'Project added successfully!',
+            data: null
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not add Project'
+            message: 'Could not add Project',
+            data: null
         })
     }
 }
@@ -36,7 +39,8 @@ const addPastProject = async (req, res) => {
             const formatted = ZodError.flatten(result.error);
             return res.status(401).send({
                 success: false,
-                message: `Could not add project: ${formatted}`, 
+                message: `Could not add project: ${formatted}`,
+                data: null 
             });           
         }  
     try {
@@ -46,12 +50,14 @@ const addPastProject = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Project added successfully!'
+            message: 'Project added successfully!',
+            data: null
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not add Project'
+            message: 'Could not add Project',
+            data: null
         })
     }
 }
@@ -65,7 +71,8 @@ const getProjects = async (req, res) => {
             projects = await projectsModel.find({category: cat})
             if(!projects) return res.status(404).send({
                 success: false,
-                message: 'Projects not found'
+                message: 'Projects not found',
+                data: null
             })
         }
         else{
@@ -81,7 +88,8 @@ const getProjects = async (req, res) => {
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not get Projects'
+            message: 'Could not get Projects',
+            data: null
         })
     }
 }
@@ -92,18 +100,21 @@ const deleteProject = async (req, res) => {
          const deleteproject = await projectsModel.findByIdAndDelete(id)
         if(!deleteproject) return res.status(404).send({
             success: false,
-            message: 'Project not found'
+            message: 'Project not found',
+            data: null
         })
         
          res.status(200).send({
             success: true,
             message: 'Project deleted successfully!',
+            data: null
            
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not delete project'
+            message: 'Could not delete project',
+            data: null
         })
     } 
 }
@@ -117,30 +128,35 @@ const validation = projectsSchema.safeParse(req.body);
         return res.status(401).send({
             success: false,
             message: `Could not edit project: ${formatted}`, 
+            data: null
         });           
     }  
     try {
         const {id} = req.params
         if(!id) return res.status(401).send({
             success: false,
-            message: 'ID is required'
+            message: 'ID is required',
+            data: null
         })
 
         const editProject = await projectsModel.findByIdAndUpdate(id, validation.data, {new: true})
         if(!editProject) return res.status(404).send({
             success: false,
-            message: 'Project not found'
+            message: 'Project not found',
+            data: null
         })
         
 
         res.status(200).send({
             success: true,
-            message: 'Project edited successfully!'
+            message: 'Project edited successfully!',
+            data: null
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not edit Project'
+            message: 'Could not edit Project',
+            data: null
         })
     }
 }

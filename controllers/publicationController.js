@@ -10,6 +10,7 @@ const addPublication = async (req, res) => {
             return res.status(401).send({
                 success: false,
                 message: `Could not create publication: ${formatted}`, 
+                data: null
             });           
         }  
     try {
@@ -19,12 +20,14 @@ const addPublication = async (req, res) => {
 
         res.status(201).send({
             success: true,
-            message: 'Publication added successfully!'
+            message: 'Publication added successfully!',
+            data: null
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not add Publication'
+            message: 'Could not add Publication',
+            data: null
         })
     }
 };
@@ -41,7 +44,8 @@ const getPublications = async (req, res) => {
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not get Publications'
+            message: 'Could not get Publications',
+            data: null
         })
     }
 };
@@ -52,18 +56,21 @@ const deletePublication = async (req, res) => {
          const deletedpublication = await publicationModel.findByIdAndDelete(id)
         if(!deletedpublication) return res.status(404).send({
             success: false,
-            message: 'Publication not found'
+            message: 'Publication not found',
+            data: null
         })
         
          res.status(200).send({
             success: true,
             message: 'Publication deleted successfully!',
+            data: null
            
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not delete Publication'
+            message: 'Could not delete Publication',
+            data: null
         })
     } 
 };
@@ -76,6 +83,7 @@ const editPublication = async (req, res) => {
         return res.status(401).send({
             success: false,
             message: `Could not edit publication: ${formatted}`, 
+            data: null
         });           
     }  
         
@@ -84,18 +92,20 @@ const editPublication = async (req, res) => {
          const editedpublication = await publicationModel.findByIdAndUpdate(id, validation.data, {new:true})
         if(!editedpublication) return res.status(404).send({
             success: false,
-            message: 'Publication not found or could not be edited'
+            message: 'Publication not found or could not be edited',
+            data: null
         })
         
          res.status(200).send({
             success: true,
             message: 'Publication Edited successfully!',
-           
+           data: null
         })
     } catch (error) {
          res.status(500).send({
             success: false,
-            message: 'Could not edit Publication'
+            message: 'Could not edit Publication',
+            data: null
         })
     } 
 };

@@ -10,6 +10,7 @@ const updatePage = async (req, res) => {
     return res.status(401).send({
       success: false,
       message: 'Page ID is required',
+      data: null
     });
   }
 
@@ -17,6 +18,7 @@ const updatePage = async (req, res) => {
     return res.status(400).send({
       success: false,
       message: 'Content must be a valid object',
+      data: null
     });
   }
 
@@ -27,6 +29,7 @@ const updatePage = async (req, res) => {
       return res.status(404).send({
         success: false,
         message: 'Page not found',
+        data: null
       });
     }
 
@@ -53,6 +56,7 @@ const updatePage = async (req, res) => {
         return res.status(400).send({
           success: false,
           message: `Invalid content format for section "${sectionKey}"`,
+          data: null
         });
       }
     }
@@ -70,7 +74,7 @@ const updatePage = async (req, res) => {
     return res.status(500).send({
       success: false,
       message: 'Could not update page',
-      error: err.message,
+      data: err.message,
     });
   }
 };
@@ -81,12 +85,14 @@ const getPages = async (req, res) => {
 
         if(!pageId) return res.status(401).send({
             success: false,
-            message: 'Page ID is required'
+            message: 'Page ID is required',
+            data: null
         })
         const foundPage = await pagesModel.findOne({pageId: pageId})
         if(!foundPage) return res.status(404).send({
             success: false,
-            message: 'Page Not Found'
+            message: 'Page Not Found',
+            data: null
         })
          res.status(200).send({
             success: true,
@@ -100,7 +106,7 @@ const getPages = async (req, res) => {
          res.status(500).send({
             success: false,
             message: 'Could not fetch research page',
-            error: err.message
+            data: err.message
        });
     }
 }
@@ -112,6 +118,7 @@ const validation = pageSchema.safeParse(req.body);
         return res.status(401).send({
             success: false,
             message: `Could not Create Page: ${formatted}`, 
+            data: null
         });           
     } 
       try {
@@ -122,6 +129,7 @@ const validation = pageSchema.safeParse(req.body);
       return res.status(400).send({
         success: false,
         message: 'Page already exists',
+        data: null
       });
     }
 
@@ -144,7 +152,7 @@ const validation = pageSchema.safeParse(req.body);
             res.status(500).send({
             success: false,
             message: 'Could not Create page',
-            error: err.message
+            data: err.message
        });
     }
 }
@@ -162,7 +170,7 @@ const getPageLinks = async (req, res) => {
             res.status(500).send({
             success: false,
             message: 'Could not Create page',
-            error: err.message
+            data: err.message
        });
     }
 }
@@ -174,6 +182,7 @@ const updatePageLinks = async (req, res) => {
     return res.status(401).send({
       success: false,
       message: 'ID is required',
+      data: null
     });
   }
 
@@ -184,6 +193,7 @@ const updatePageLinks = async (req, res) => {
         return res.status(401).send({
             success: false,
             message: `Could not Create Link: ${formatted}`, 
+            data: null
         });           
     } 
 
@@ -198,6 +208,7 @@ const updatePageLinks = async (req, res) => {
       return res.status(404).send({
         success: false,
         message: 'Link not found',
+        data: null
       });
     }
 
@@ -211,7 +222,7 @@ const updatePageLinks = async (req, res) => {
     res.status(500).send({
       success: false,
       message: 'Could not update Link',
-      error: err.message,
+      data: err.message,
     });
   }
 };
@@ -221,25 +232,28 @@ const deletePage = async (req, res) => {
         const {id} = req.params
         if(!id) return res.status(401).send({
             success: false,
-            message: 'Could not delete Page'
+            message: 'Could not delete Page',
+            data: null
         })
 
         const deletedPage = await pagesModel.findByIdAndDelete(id)
         if(!deletedPage) return res.status(404).send({
             success: false,
-            message: 'Page not found!'
+            message: 'Page not found!',
+            data: null
         })
 
         res.status(200).send({
             success: true,
-            message: 'Page deleted successfully!'
+            message: 'Page deleted successfully!',
+            data: null
         })
     } catch (err) {
        console.error(err);
     res.status(500).send({
       success: false,
       message: 'Could not delete page',
-      error: err.message,
+      data: err.message,
     });  
     }
 }
