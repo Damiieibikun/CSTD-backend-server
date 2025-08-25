@@ -5,7 +5,8 @@ const {config} = require('./config/config')
 const cors = require('cors');
 const path = require('path');
 app.use(cors({
-    origin: 'https://cstd-backend-server.onrender.com', 
+    origin: 'http://localhost:3000', 
+    // origin: 'https://cstd-backend-server.onrender.com', 
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
   }));
