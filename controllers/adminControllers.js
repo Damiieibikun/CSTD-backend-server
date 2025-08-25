@@ -125,7 +125,7 @@ const loginAdmin = async (req, res) => {
                   
         if(!adminFound.approved) return res.status(401).send({
             success: false,
-            message: "*Unable to log in, Please Contact Admin for further assistance",
+            message: "*Pending Approval, Please Contact Admin for further assistance",
             data: null
         })
 
