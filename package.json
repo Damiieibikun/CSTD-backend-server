@@ -4,7 +4,7 @@
   "description": "cstd_Backend",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "nodemon app"
   },
   "author": "CSTD",
@@ -15,9 +15,22 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.3",
     "multer": "^2.0.2",
     "nodemon": "^3.1.10",
     "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^30.0.5",
+    "superagent": "^10.2.3",
+    "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/*Tests.js"
+    ]
   }
 }

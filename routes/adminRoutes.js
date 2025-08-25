@@ -1,7 +1,7 @@
 const express = require('express');
-const { createAdmin, createWebmaster, 
+const { createAdmin, createWebmaster,
     loginAdmin, changePwdAdmin, fetchAdmins,
-approveAdmin, denyAdmin, deleteAdmin, editAdmin } = require('../controllers/adminControllers');
+    approveAdmin, denyAdmin, deleteAdmin, editAdmin } = require('../controllers/adminControllers');
 const router = express.Router();
 
 router.get('/alladmins', fetchAdmins)
