@@ -2,17 +2,7 @@ const newsModel = require("../models/newsModel");
 const {newsSchema}  = require ("../validators/formValidators");
 const { ZodError } = require('zod');
 const{cloudinary} = require('../config/config')
-
-// Function to upload buffer to Cloudinary
-const uploadToCloudinary = (buffer, folder) => {
-return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream({ folder }, (error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-    }).end(buffer);
-});
-};
-
+const uploadToCloudinary = require('../middlewares/cloudinary')
 const postNews = async (req, res) => {
     
     const textData = {
@@ -169,14 +159,14 @@ const editNews = async (req, res) => {
 
         // Handle media files if new ones are uploaded
         if (req.files && req.files.media && req.files.media.length > 0) {
-            console.log('Processing new media files for edit...');
+           
             
             const mediaFiles = req.files.media;
             
             // Upload new media files
             let uploadedImages = await Promise.all(
                 mediaFiles.map(async (file) => {
-                    console.log('Processing file:', file.originalname);
+                  
                     
                     const result = await uploadToCloudinary(file.buffer, 'news-arrayposts');
                     
@@ -191,7 +181,7 @@ const editNews = async (req, res) => {
                 })
             );
 
-            console.log('New uploaded images:', uploadedImages);
+          
            updateData.media = [...existingNews.media, ...uploadedImages];
             if (existingNews.media && existingNews.media.length > 0) {
                 for (const oldMedia of existingNews.media) {
@@ -202,12 +192,11 @@ const editNews = async (req, res) => {
             }
         } else {
             // No new files uploaded, keep existing media
-            console.log('No new media files, keeping existing media');
+           
             const mediaFiles = JSON.parse(req.body.media);
             const existingIds = existingNews.media.map(m => m.public_id);
             const remainingIds = mediaFiles.map(m => m.public_id);
-            console.log(existingIds)
-            console.log(remainingIds)
+            
 
           
             const toDelete = existingIds.filter(id => !remainingIds.includes(id));
