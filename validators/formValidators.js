@@ -137,6 +137,7 @@ const projectsSchema = z.object({
   technology: z.string().optional(),
   partners: z.string().optional(),
   output: z.string().optional(),
+  image: z.string().optional(),
 });
 
   // Publications

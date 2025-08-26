@@ -27,6 +27,15 @@ const projectsSchema = new Schema({
         required: true,
         enum: ['upcoming', 'past']            
     },
+     image:{
+        url:{
+            type: String
+        },   
+          public_id: {
+        type: String        
+    },
+                   
+    },
     
 
 }, {timestamps: true})
