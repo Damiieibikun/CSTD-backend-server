@@ -1,6 +1,5 @@
 const newsModel = require("../models/newsModel");
 const {newsSchema}  = require ("../validators/formValidators");
-const { ZodError } = require('zod');
 const{cloudinary} = require('../config/config')
 const uploadToCloudinary = require('../middlewares/cloudinary')
 const postNews = async (req, res) => {
@@ -22,7 +21,6 @@ const postNews = async (req, res) => {
             data: formatted
         });
     }
-
     try { 
         if (!req.files || req.files.length === 0) {
             return res.status(400).send({

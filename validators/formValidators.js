@@ -83,7 +83,7 @@ const pageSchema =z.object({
     .string()
     .optional()
     .or(z.literal('')),
-
+    
   path: z
     .string()
     .min(1, { message: 'Path is required' }),
@@ -184,36 +184,9 @@ const eventSchema = z.object({
     .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "*Time must be in HH:MM format"),
   location: z.string().min(1, "*Event location is required")
     .max(300, "*Location must be less than 300 characters"),
-  flyer: z.union([
-    z.string().min(1, "*Event flyer is required"),
-    z.instanceof(File)
-  ]).refine(
-    (value) => {
-      if (typeof value === 'string') {
-        // Allow URLs
-        if (value.startsWith('http://') || value.startsWith('https://')) {
-          return true;
-        }
-        // Allow base64 images
-        if (value.startsWith('data:image/')) {
-          return true;
-        }
-        return value.length > 0;
-      }
-      
-      if (value instanceof File) {
-        // Validate file type
-        return value.type.startsWith('image/');
-      }
-      
-      return false;
-    },
-    "*Please provide a valid image URL or upload an image file"
-  )
+  flyer:  z.string().optional(),
 });
 
-
-// Contact Form
 const feedbackSchema = z.object({
   name: z
     .string({ required_error: 'Name is required' })

@@ -52,44 +52,56 @@ const getFooter = async (req, res) => {
 }
 // Update footer
 const updateFooter = async (req, res) => {
-    const{id} = req.params
-        if(!id) return res.status(401).send({
+    const { id } = req.params;
+    
+    if (!id) {
+        return res.status(400).send({
             success: false,
             message: 'ID is required',
             data: null
-        })
-    const validation = footerSchema.safeParse(req.body);
-    if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
-        return res.status(401).send({
-            success: false,
-            message: `Could not update Footer: ${formatted}`,
-            data: null 
-        });           
-        } 
-    try {        
-        const validatedData = validation.data
-    const footer = await Footer.findByIdAndUpdate(id, validatedData, { new: true });
-    if (!footer) return res.status(404).send(
-        {   
-            success: false,
-            message: "Footer not found",
-            data: null 
         });
-   
-    res.status(200).send({
-        success: true,
-        message: 'Footer updated successfully!',
-        data: footer
-    })
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-    success: false,
-    message: 'Could not update Footer',
-    data: err.message
-       });
-  }
-}
+    }
+    
+    console.log('Request body:', req.body);    
+    
+    const validation = footerSchema.safeParse(req.body);
+    
+    if (!validation.success) {
+        const formatted = validation.error.flatten();
+        return res.status(400).send({
+            success: false,
+            message: `Could not update Footer: ${JSON.stringify(formatted)}`,
+            data: formatted
+        });           
+    } 
+    
+    try {        
+        const validatedData = validation.data;
+        
+        const footer = await Footer.findByIdAndUpdate(id, validatedData, { new: true });
+        
+        if (!footer) {
+            return res.status(404).send({   
+                success: false,
+                message: "Footer not found",
+                data: null 
+            });
+        }
+       
+        res.status(200).send({
+            success: true,
+            message: 'Footer updated successfully!',
+            data: footer
+        });
+        
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send({
+            success: false,
+            message: 'Could not update Footer',
+            data: err.message
+        });
+    }
+};
 
 module.exports = {addFooter, getFooter, updateFooter};

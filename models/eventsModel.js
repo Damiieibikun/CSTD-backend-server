@@ -8,6 +8,7 @@ const eventSchema = new mongoose.Schema(
     time: { type: String, required: true }, 
     location: { type: String, required: true },
     flyer: { type: String, required: true }, 
+    public_id: {type: String, required: true}
   },
   { timestamps: true }
 );

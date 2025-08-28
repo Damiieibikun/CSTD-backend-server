@@ -1,22 +1,38 @@
 const eventsModel = require("../models/eventsModel");
 const {eventSchema}  = require ("../validators/formValidators");
-const { ZodError } = require('zod');
+const{cloudinary} = require('../config/config')
+const uploadToCloudinary = require('../middlewares/cloudinary')
 const postEvent = async (req, res) => {
         const validation = eventSchema.safeParse(req.body);
+         if (!validation.success) {
+       
+        const formatted = validation.error.flatten();
+        return res.status(400).send({
+            success: false,
+            message: `Could not post event: ${JSON.stringify(formatted)}`,
+            data: formatted
+        });           
+    } 
 
-        if (!validation.success) {
-            const formatted = ZodError.flatten(result.error);
-            return res.status(401).send({
+    try {      
+        let flyerResult
+    if (!req.file) {
+         return res.status(400).send({
                 success: false,
-                message: `Could not post event: ${formatted}`, 
+                message: 'Missing required files: flyer',
                 data: null
-            });           
-        } 
+            });   
+    }
+    if (req.file) {
+          flyerResult = await uploadToCloudinary(
+                req.file.buffer,
+                "event-flyers"
+              );      
+    }
 
+    const newEvent = {...validation.data, flyer: flyerResult.url, public_id: flyerResult.public_id}
 
-    try {
-
-    const createdEvent = new eventsModel(validation.data)
+    const createdEvent = new eventsModel(newEvent)
         await createdEvent.save()
 
         res.status(201).send({
@@ -58,12 +74,18 @@ const deleteEvent =  async (req, res) => {
 
     try {
         const {id} = req.params
-    const deleteevent = await eventsModel.findByIdAndDelete(id)
-        if(!deleteevent) return res.status(404).send({
+        const foundEvent = await eventsModel.findById(id)
+        if(!foundEvent) return res.status(404).send({
             success: false,
             message: 'Event not found',
             data: null
         })
+
+        if(foundEvent.public_id){
+             await cloudinary.uploader.destroy(foundEvent.public_id);
+        }
+
+        await eventsModel.findByIdAndDelete(id)
 
         res.status(200).send({
             success: true,
@@ -83,26 +105,44 @@ const deleteEvent =  async (req, res) => {
 const editEvent =  async (req, res) => {
     const validation = eventSchema.safeParse(req.body);
 
-        if (!validation.success) {
-            const formatted = ZodError.flatten(result.error);
-            return res.status(401).send({
-                success: false,
-                message: `Could not edit event: ${formatted}`, 
-                data: null
-            });           
-        } 
-
-
+         if (!validation.success) {
+        // Fix: Use validation.error instead of result.error
+        const formatted = validation.error.flatten();
+        return res.status(400).send({
+            success: false,
+            message: `Could not update Event: ${JSON.stringify(formatted)}`,
+            data: formatted
+        });           
+    } 
+        
     try {
-        const {id} = req.params       
-
-        const editEvent = await eventsModel.findByIdAndUpdate(id, validation.data, {new: true})
-        if(!editEvent) return res.status(404).send({
+        const {id} = req.params      
+        const foundEvent = await eventsModel.findById(id)
+        if(!foundEvent) return res.status(404).send({
             success: false,
             message: 'Could not edit event',
             data: null
         })
 
+        let currentFlyer = foundEvent.flyer
+        let currentPublicID = foundEvent.public_id
+        let newFlyerResult;        
+
+    if (req.file) {
+          newFlyerResult = await uploadToCloudinary(
+                req.file.buffer,
+                "event-flyers"
+              );
+        if(foundEvent.public_id){
+            await cloudinary.uploader.destroy(foundEvent.public_id);
+        }
+         
+        currentFlyer = newFlyerResult.url
+        currentPublicID = newFlyerResult.public_id
+    }
+
+    const editedEvent = {...validation.data, flyer: currentFlyer, public_id: currentPublicID}
+    await eventsModel.findByIdAndUpdate(id, editedEvent, {new: true})
         res.status(200).send({
             success: true,
             message: 'Event edited successfully!',
