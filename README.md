@@ -1,7 +1,7 @@
 # CSTD Website API
 
 ## Overview
-This is a robust and scalable backend API for the CSTD (Center for Sustainable Technology Development) website, built with Node.js and the Express.js framework. It provides comprehensive content management capabilities, handling administrative tasks, dynamic page content, news, events, projects, publications, and user feedback, all powered by MongoDB for data persistence and Cloudinary for media storage.
+This is a robust and scalable backend API for the CSTD (Center for Satellite Technology Development) website, built with Node.js and the Express.js framework. It provides comprehensive content management capabilities, handling administrative tasks, dynamic page content, news, events, projects, publications, and user feedback, all powered by MongoDB for data persistence and Cloudinary for media storage.
 
 ## Features
 *   ⚙️ **Admin Management**: Secure authentication, user roles (admin, webmaster, media), and CRUD operations for managing administrators.
