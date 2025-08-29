@@ -6,17 +6,29 @@ const{cloudinary} = require('../config/config')
 const uploadToCloudinary = require('../middlewares/cloudinary')
 // Create footer
 const addFooter = async (req, res) => {
-const validation = footerSchema.safeParse(req.body);
-    if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
-        return res.status(401).send({
+const objData = JSON.parse(req.body.data)
+const validation = footerSchema.safeParse(objData);
+   if (!validation.success) {
+        const formatted = validation.error.flatten();
+        return res.status(400).send({
             success: false,
-            message: `Could not add Footer: ${formatted}`, 
-            data: null
+            message: `Could not add Footer: ${JSON.stringify(formatted)}`,
+            data: formatted
         });           
-        } 
+    } 
     try {    
-    const footer = new Footer(validation.data);
+
+    let logoResult;    
+           
+    if (req.file) {
+        logoResult = await uploadToCloudinary(
+            req.file.buffer,
+            "logo"
+            );                     
+    }
+    const newFooter = {...validation.data, logo: logoResult.url, public_id: logoResult.public_id}      
+    const footer = new Footer(newFooter);
+
     await footer.save();
     res.status(201).send({
         success: true,
