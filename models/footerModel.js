@@ -21,6 +21,7 @@ const socialLinkSchema = new mongoose.Schema({
 
 const footerSchema = new mongoose.Schema({
   logo: { type: String, default: null }, // URL or path
+  public_id: { type: String, default: null }, // URL or path
   description: { type: String, default: '' },
   copyright: { type: String, default: '' },
   columns: { type: [columnSchema], default: [] },

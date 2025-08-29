@@ -1,8 +1,9 @@
 const Footer = require('../models/footerModel');
-const { ZodError } = require('zod');
+const { ZodError, json } = require('zod');
 const { footerSchema } = require('../validators/formValidators');
 const footerModel = require('../models/footerModel');
-
+const{cloudinary} = require('../config/config')
+const uploadToCloudinary = require('../middlewares/cloudinary')
 // Create footer
 const addFooter = async (req, res) => {
 const validation = footerSchema.safeParse(req.body);
@@ -60,11 +61,11 @@ const updateFooter = async (req, res) => {
             message: 'ID is required',
             data: null
         });
-    }
+    } 
+
+    const objData = JSON.parse(req.body.data)
     
-    console.log('Request body:', req.body);    
-    
-    const validation = footerSchema.safeParse(req.body);
+    const validation = footerSchema.safeParse(objData);
     
     if (!validation.success) {
         const formatted = validation.error.flatten();
@@ -75,23 +76,43 @@ const updateFooter = async (req, res) => {
         });           
     } 
     
-    try {        
-        const validatedData = validation.data;
+    try {          
+          
+        const existingfooter = await Footer.findById(id);
         
-        const footer = await Footer.findByIdAndUpdate(id, validatedData, { new: true });
-        
-        if (!footer) {
+        if (!existingfooter) {
             return res.status(404).send({   
                 success: false,
                 message: "Footer not found",
                 data: null 
             });
         }
+
+        let currentLogo = existingfooter.logo
+        let currentPublicID = existingfooter.public_id
+        let logoResult;
        
+        if (req.file) {
+                  logoResult = await uploadToCloudinary(
+                        req.file.buffer,
+                        "logo"
+                      );
+                      
+             if(existingfooter.public_id){
+                await cloudinary.uploader.destroy(existingfooter.public_id);
+            }
+
+            currentLogo = logoResult.url
+            currentPublicID = logoResult.public_id
+
+            }
+
+            const footer = {...validation.data, logo: currentLogo, public_id: currentPublicID}
+            const editedFooter = await footerModel.findByIdAndUpdate(id, footer, {new: true})
         res.status(200).send({
             success: true,
             message: 'Footer updated successfully!',
-            data: footer
+            data: editedFooter
         });
         
     } catch (err) {
@@ -105,3 +126,4 @@ const updateFooter = async (req, res) => {
 };
 
 module.exports = {addFooter, getFooter, updateFooter};
+
