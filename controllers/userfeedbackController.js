@@ -1,15 +1,16 @@
 const feedbackModel = require("../models/userfeedbackModel");
 const {feedbackSchema}  = require ("../validators/formValidators");
-const { ZodError } = require('zod');
+const z = require('zod');
 
 const sendFeedBack = async (req, res) => {
     const validation = feedbackSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
-            message: `Could not send Message: ${formatted}`, 
+            message: `Could not send Message`, 
+            error: formatted
         });           
     }  
 
@@ -35,7 +36,7 @@ const getFeedBack = async (req, res) => {
     try {
         const response = await feedbackModel.find({})
 
-        res.status(201).send({
+        res.status(200).send({
             success: true,
             message: 'FeedBack Fetched successfully!',
             data: response

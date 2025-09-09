@@ -1,6 +1,6 @@
 
 const bcryptjs = require('bcryptjs')
-const { ZodError } = require('zod');
+const z = require('zod');
 const adminModel = require("../models/adminModel")
 const { registerSchema, editAdminSchema, loginSchema, changePasswordSchema } = require('../validators/formValidators')
 const jwt = require("jsonwebtoken");
@@ -12,10 +12,12 @@ const createAdmin = async (req, res) => {
     const validation = registerSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
-            message: `Could not register Admin: ${formatted}`,
+            message: `Could not register Admin`,
+            error: formatted,
         });
     }
 
@@ -52,7 +54,7 @@ const createWebmaster = async (req, res) => {
     const validation = registerSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
             message: `Could not register Admin: ${formatted}`,
@@ -92,7 +94,7 @@ const loginAdmin = async (req, res) => {
     const validation = loginSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
             message: `Could not login Admin: ${formatted}`,
@@ -125,6 +127,13 @@ const loginAdmin = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
+        const TOKEN_NAME = process.env.TOKEN_NAME;
+        res.cookie(TOKEN_NAME, token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: "10d",
+        })
 
         res.status(200).send({
             success: true,
@@ -137,7 +146,6 @@ const loginAdmin = async (req, res) => {
                 email: adminFound.email,
                 phone: adminFound.phone
             },
-            token: token,
         })
 
     } catch (err) {
@@ -155,10 +163,11 @@ const changePwdAdmin = async (req, res) => {
     const validation = changePasswordSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
-            message: `Could not change Admin password: ${formatted}`,
+            message: `Could not change Admin password`,
+            error: formatted,
         });
     }
 
@@ -199,7 +208,7 @@ const changePwdAdmin = async (req, res) => {
         res.status(500).send({
             success: false,
             message: 'Could not change admin password',
-            error: error.message
+            error: error
         })
     }
 }
@@ -207,7 +216,7 @@ const editAdmin = async (req, res) => {
     const validation = editAdminSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = z.flattenError(validation.error);
         return res.status(401).send({
             success: false,
             message: `Could not edit Admin details: ${formatted}`,

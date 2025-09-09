@@ -1,14 +1,15 @@
 const eventsModel = require("../models/eventsModel");
 const {eventSchema}  = require ("../validators/formValidators");
-const { ZodError } = require('zod');
+const z = require('zod');
 const postEvent = async (req, res) => {
         const validation = eventSchema.safeParse(req.body);
 
         if (!validation.success) {
-            const formatted = ZodError.flatten(result.error);
+            const formatted = z.flattenError(validation.error);
             return res.status(401).send({
                 success: false,
-                message: `Could not post event: ${formatted}`, 
+                message: `Could not post event`,
+                error: formatted, 
             });           
         } 
 
@@ -77,10 +78,11 @@ const editEvent =  async (req, res) => {
     const validation = eventSchema.safeParse(req.body);
 
         if (!validation.success) {
-            const formatted = ZodError.flatten(result.error);
+            const formatted = z.flattenError(validation.error);
             return res.status(401).send({
                 success: false,
-                message: `Could not edit event: ${formatted}`, 
+                message: `Could not edit event`, 
+                error: formatted.fieldErrors,
             });           
         } 
 

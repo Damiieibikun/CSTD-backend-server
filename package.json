@@ -4,7 +4,7 @@
   "description": "cstd_Backend",
   "main": "app.js",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles  --verbose",
     "dev": "nodemon app"
   },
   "author": "CSTD",
@@ -24,13 +24,15 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "chai": "^6.0.1",
     "jest": "^30.0.5",
+    "mongodb-memory-server": "^10.2.0",
     "superagent": "^10.2.3",
     "supertest": "^7.1.4"
   },
   "jest": {
     "testMatch": [
-      "**/tests/*Tests.js"
+      "**/tests/*.js"
     ]
   }
 }

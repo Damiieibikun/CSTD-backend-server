@@ -2,46 +2,46 @@ const { z } = require('zod');
 
 const registerSchema = z.object({
   firstname: z.string().min(1, "*First name is required"),
-    lastname: z.string().min(1, "*Last name is required"),
-     email: z.email({ message: "*Invalid email format" }) 
-            .min(1, "*Email is required"),
-    role: z.string().optional(),
-    phone: z.string().min(10, "*Phone number must be at least 10 digits")
-      .regex(
-        /^(?:\+234|0)[789][01]\d{8}$/,
-        "*Phone number must contain only digits"
-      ),
-    password: z.string().min(6, "*Password must be at least 6 characters")
-      .regex(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/,
-        "*Password must be at least 4 characters, include a number and a special character. digits"
-      ),
+  lastname: z.string().min(1, "*Last name is required"),
+  email: z.email({ message: "*Invalid email format" })
+    .min(1, "*Email is required"),
+  role: z.string().optional(),
+  phone: z.string().min(10, "*Phone number must be at least 10 digits")
+    .regex(
+      /^(?:\+234|0)[789][01]\d{8}$/,
+      "*Phone number must contain only digits"
+    ),
+  password: z.string().min(6, "*Password must be at least 6 characters")
+    .regex(
+      /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/,
+      "*Password must be at least 4 characters, include a number and a special character. digits"
+    ),
 });
 
 const editAdminSchema = z
   .object({
     id: z.string().min(1, 'Admin ID is required'),
-    firstname: z.string().min(1, "*First name is required"),
-    lastname: z.string().min(1, "*Last name is required"), 
-    email: z.email({ message: "*Invalid email format" }) 
-            .min(1, "*Email is required"),
+    firstname: z.string().min(1, "*First name is required").optional(),
+    lastname: z.string().min(1, "*Last name is required").optional(),
+    email: z.email({ message: "*Invalid email format" })
+      .min(1, "*Email is required").optional(),
     phone: z.string().min(10, "*Phone number must be at least 10 digits")
       .regex(
         /^(?:\+234|0)[789][01]\d{8}$/,
         "*Phone number must contain only digits"
-      )  
+      ).optional()
   });
 
 
 const loginSchema = z
   .object({
-    email: z.email({ message: "*Invalid email format" }) 
-            .min(1, "*Email is required"),
+    email: z.email({ message: "*Invalid email format" })
+      .min(1, "*Email is required"),
     password: z.string().min(1, "*Password cannot be empty"),
   })
 
 const changePasswordSchema = z
-  .object({   
+  .object({
     id: z.string().min(1, 'Admin ID is required'),
     currentPassword: z.string().min(1, "*Password cannot be empty"),
     newPassword: z.string().min(6, "*Password must be at least 6 characters")
@@ -54,7 +54,7 @@ const changePasswordSchema = z
   .refine((data) => data.newPassword === data.passwordConfirm, {
     path: ["passwordConfirm"],
     message: "*Passwords do not match",
-});
+  });
 
 // Links and pages
 const childLinkSchema = z.object({
@@ -64,7 +64,7 @@ const childLinkSchema = z.object({
 });
 
 
-const pageSchema =z.object({
+const pageSchema = z.object({
   pageId: z
     .string()
     .trim()
@@ -139,8 +139,8 @@ const projectsSchema = z.object({
   output: z.string().optional(),
 });
 
-  // Publications
-  const publicationSchema = z.object({
+// Publications
+const publicationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   summary: z.string().min(1, "Summary is required"),
   authors: z
@@ -155,7 +155,7 @@ const projectsSchema = z.object({
 // News
 const newsSchema = z.object({
   title: z.string().min(3, "Title is required"),
-  date: z.string().min(1, "Date is required"), 
+  date: z.string().min(1, "Date is required"),
   brief: z.string().min(10, "Brief description is required"),
   content: z.string().min(20, "Content must be at least 20 characters"),
   media: z
@@ -199,12 +199,12 @@ const eventSchema = z.object({
         }
         return value.length > 0;
       }
-      
+
       if (value instanceof File) {
         // Validate file type
         return value.type.startsWith('image/');
       }
-      
+
       return false;
     },
     "*Please provide a valid image URL or upload an image file"
@@ -217,9 +217,9 @@ const feedbackSchema = z.object({
   name: z
     .string({ required_error: 'Name is required' })
     .min(1, 'Name cannot be empty'),
-    
- email: z.email({ message: "*Invalid email format" }) 
-            .min(1, "*Email is required"),
+
+  email: z.email({ message: "*Invalid email format" })
+    .min(1, "*Email is required"),
   phone: z
     .string()
     .optional()
@@ -230,13 +230,13 @@ const feedbackSchema = z.object({
     .min(1, 'Message cannot be empty'),
 });
 
-module.exports = {  
+module.exports = {
   // Admin
   registerSchema,
   editAdminSchema,
   loginSchema,
   changePasswordSchema,
-  
+
   // pages
   pageSchema,
 
