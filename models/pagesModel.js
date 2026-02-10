@@ -13,6 +13,10 @@ const PageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    order: {
+      type: Number,
+      default: 0,
+    },
     pageType: {
       type: String,
       required: true,

@@ -325,7 +325,7 @@ const validation = pageSchema.safeParse(req.body);
         });           
     } 
       try {
-    const { pageId, icon, ...rest } = validation.data;
+    const { pageId, icon, order, ...rest } = validation.data;
 
     const foundPage = await pagesModel.findOne({ pageId });
     if (foundPage) {
@@ -336,9 +336,17 @@ const validation = pageSchema.safeParse(req.body);
       });
     }
 
+    // Determine order: if provided use it, otherwise append to end
+    let nextOrder = order;
+    if (typeof nextOrder !== 'number') {
+      const count = await pagesModel.countDocuments();
+      nextOrder = count;
+    }
+
     const pageData = {
       pageId,
       icon: icon || 'fa:FaRegFileCode',
+      order: nextOrder,
       ...rest,
     };
 
@@ -362,7 +370,7 @@ const validation = pageSchema.safeParse(req.body);
 
 const getPageLinks = async (req, res) => {
     try {
-        const response = await pagesModel.find().sort({ pageName: 1 })
+        const response = await pagesModel.find().sort({ order: 1, createdAt: 1 })
         res.status(200).send({
             success: true,
             message: 'Page Links Fetched successfully',

@@ -88,6 +88,13 @@ const pageSchema =z.object({
     .string()
     .min(1, { message: 'Path is required' }),
 
+  order: z
+    .number()
+    .int()
+    .nonnegative()
+    .optional()
+    .default(0),
+
   children: z
     .array(childLinkSchema)
     .optional()
