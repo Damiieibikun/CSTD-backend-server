@@ -317,10 +317,10 @@ const getPages = async (req, res) => {
 const createPageLinks = async (req, res) => {
 const validation = pageSchema.safeParse(req.body);
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = validation.error?.flatten?.() ?? ZodError.flatten(validation.error);
         return res.status(401).send({
             success: false,
-            message: `Could not Create Page: ${formatted}`, 
+            message: `Could not Create Page: ${JSON.stringify(formatted)}`, 
             data: null
         });           
     } 
@@ -400,10 +400,10 @@ const updatePageLinks = async (req, res) => {
   const validation = pageSchema.safeParse(req.body);
 
  if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = validation.error?.flatten?.() ?? ZodError.flatten(validation.error);
         return res.status(401).send({
             success: false,
-            message: `Could not Create Link: ${formatted}`, 
+            message: `Could not update Link: ${JSON.stringify(formatted)}`, 
             data: null
         });           
     } 

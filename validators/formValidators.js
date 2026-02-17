@@ -104,6 +104,11 @@ const pageSchema =z.object({
     .record(z.any())
     .optional()
     .default({}),
+
+  isHidden: z
+    .boolean()
+    .optional()
+    .default(false),
 });
 
 
