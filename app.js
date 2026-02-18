@@ -5,7 +5,7 @@ const {config} = require('./config/config')
 const cors = require('cors');
 const path = require('path');
 app.use(cors({
-    origin: ['https://cstd-frontend-ui.onrender.com', 'http://localhost:3000'], 
+    origin: ['https://cstd-frontend-ui.onrender.com', 'https://cstd-demo-web.onrender.com', 'http://localhost:3000'], 
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
   }));
