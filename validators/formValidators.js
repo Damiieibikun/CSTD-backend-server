@@ -214,6 +214,7 @@ const feedbackSchema = z.object({
   message: z
     .string({ required_error: 'Message is required' })
     .min(1, 'Message cannot be empty'),
+  source: z.string().optional(),
 });
 
 module.exports = {  

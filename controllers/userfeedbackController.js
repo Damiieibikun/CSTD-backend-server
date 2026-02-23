@@ -6,7 +6,7 @@ const sendFeedBack = async (req, res) => {
     const validation = feedbackSchema.safeParse(req.body);
 
     if (!validation.success) {
-        const formatted = ZodError.flatten(result.error);
+        const formatted = ZodError.flatten(validation.error);
         return res.status(401).send({
             success: false,
             message: `Could not send Message: ${formatted}`, 
